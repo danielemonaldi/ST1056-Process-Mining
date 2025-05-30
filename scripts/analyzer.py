@@ -38,7 +38,7 @@ variant_stats = sorted(variant_stats, key=lambda x: x["count"], reverse=True)
 
 # Print the total number of distinct variants
 print(f"\nNumber of variants: {len(variant_stats)}")
-print("🔝 Top 5 variants:")
+print("Top 5 variants:")
 # Print the top 5 most frequent variants along with their case counts
 for v in variant_stats[:5]:
     print(f"   - {v['variant']} → {v['count']} cases")
@@ -53,7 +53,7 @@ durations_sec = [d for d in durations if d > 0]
 
 # If there are valid durations, calculate and print summary statistics
 if durations_sec:
-    print("\n📈 Case duration statistics:")
+    print("\nCase duration statistics:")
     # Average duration in minutes (sum of durations divided by number of cases, converted from seconds)
     print(f"   - Average: {round(sum(durations_sec)/len(durations_sec)/60, 2)} minutes")
     # Minimum duration in minutes

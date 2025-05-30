@@ -67,11 +67,12 @@ heur_token_fitness = token_fitness.evaluate(heur_token)["log_fitness"]
 heur_align_fitness = alignment_fitness.evaluate(heur_align)["log_fitness"]
 
 # ====== Output results ======
-print("=== Token-based Fitness ===")
-print(f"Alpha Miner:     {alpha_token_fitness:.4f}")
-print(f"Heuristic Miner: {heur_token_fitness:.4f}")
+print("\n===== Alpha Miner algorithm =====")
+print(f"- Token-based fitness:    {alpha_token_fitness:.4f}")
+#print(f"- Alignments fitness:     {alpha_align_fitness:.4f}")
+print("=================================")
 
-print("\n=== Alignment-based Fitness ===")
-# Uncomment if alpha miner alignment fitness is computed
-# print(f"Alpha Miner:     {alpha_align_fitness:.4f}")
-print(f"Heuristic Miner: {heur_align_fitness:.4f}")
+print("\n=== Heuristic Miner algorithm ===")
+print(f"- Token-based fitness:    {heur_token_fitness:.4f}")
+print(f"- Alignments fitness:     {heur_align_fitness:.4f}")
+print("=================================")
