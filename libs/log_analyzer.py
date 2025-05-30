@@ -1,4 +1,6 @@
 from pm4py.statistics.traces.generic.log import case_statistics as cs
+from tabulate import tabulate
+from termcolor import colored
 
 def basic_statistics(log):
     """
@@ -8,17 +10,28 @@ def basic_statistics(log):
     - Extract and print all unique activities sorted alphabetically
     """
     # Total number of cases (traces)
-    print(f"\nNumber of cases (traces): {len(log)}")
+    num_cases = len(log)
     
     # Total number of events by summing the length of all traces
     total_events = sum(len(trace) for trace in log)
-    print(f"Total number of events: {total_events}")
     
     # Extract and sort unique activities
     activities = sorted({event["concept:name"] for trace in log for event in trace})
+
+    # Print summary table
+    summary_data = [
+        ["Number of cases (traces)", num_cases],
+        ["Total number of events", total_events],
+        ["Number of unique activities", len(activities)]
+    ]
+
+    print(colored("\n=========== Basic Statistics ===========", "green"))
+    print(tabulate(summary_data, tablefmt="grid"))
+
+    # Print activities as a table with a single column
     print(f"\nActivities ({len(activities)}):")
-    for activity in activities:
-        print(f"  - {activity}")
+    activities_table = [[activity] for activity in activities]
+    print(tabulate(activities_table, headers=["Activity"], tablefmt="grid"))
 
 def variant_statistics(log, top_n=5):
     """
@@ -32,12 +45,18 @@ def variant_statistics(log, top_n=5):
     variant_stats = cs.get_variant_statistics(log)
     # Sort variants by count descending
     variant_stats = sorted(variant_stats, key=lambda x: x["count"], reverse=True)
-    
+
     # Print total number of distinct variants
     print(f"\nNumber of variants: {len(variant_stats)}")
+
+    # Prepare top variant data for table
+    top_variants = variant_stats[:top_n]
+    table_data = []
+    for v in top_variants:
+        table_data.append([v['variant'], v['count']])
+    
     print(f"Top {top_n} variants:")
-    for v in variant_stats[:top_n]:
-        print(f"   - {v['variant']} → {v['count']} cases")
+    print(tabulate(table_data, headers=["Variant (Activity Sequence)", "Number of Cases"], tablefmt="grid"))
 
 def case_duration_statistics(log):
     """
@@ -52,17 +71,20 @@ def case_duration_statistics(log):
     # Filter only positive durations
     durations_sec = [d for d in durations if d > 0]
 
-    # If there are valid durations, calculate and print summary statistics
     if durations_sec:
-        print("\nCase duration statistics:")
-        # Average duration in minutes (sum of durations divided by number of cases, converted from seconds)
-        print(f"   - Average: {round(sum(durations_sec)/len(durations_sec)/60, 2)} minutes")
-        # Minimum duration in minutes
-        print(f"   - Minimum: {round(min(durations_sec)/60, 2)} minutes")
-        # Maximum duration in minutes
-        print(f"   - Maximum: {round(max(durations_sec)/60, 2)} minutes")
+        avg_duration = round(sum(durations_sec)/len(durations_sec)/60, 2)
+        min_duration = round(min(durations_sec)/60, 2)
+        max_duration = round(max(durations_sec)/60, 2)
+
+        duration_data = [
+            ["Average duration (minutes)", avg_duration],
+            ["Minimum duration (minutes)", min_duration],
+            ["Maximum duration (minutes)", max_duration]
+        ]
+
+        print(colored("\n======= Case Duration Statistics =======", "green"))
+        print(tabulate(duration_data, tablefmt="grid"))
     else:
-        # Warning message if no valid timestamps were found
         print("\nNo valid timestamps found in the cases.")
 
 def analyze_log(log):
