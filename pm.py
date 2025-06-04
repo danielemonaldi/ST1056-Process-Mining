@@ -68,7 +68,7 @@ heur_token = token_replay.apply(log, net_heur, im_heur, fm_heur, variant=token_r
 # Alignment-based conformance checking:
 # Compute alignments between the log and the Petri nets (this gives a more precise conformance metric)
 print(colored("\n========= Executing Alignments =========", "yellow"))
-# alpha_align = alignments.apply_log(log, net_alpha, im_alpha, fm_alpha)  # Uncomment if needed
+alpha_align = alignments.apply_log(log, net_alpha, im_alpha, fm_alpha)  # Uncomment if needed
 heur_align = alignments.apply_log(log, net_heur, im_heur, fm_heur)
 
 # ====== Fitness calculation ======
@@ -78,7 +78,7 @@ alpha_token_fitness = token_fitness.evaluate(alpha_token)["log_fitness"]
 heur_token_fitness = token_fitness.evaluate(heur_token)["log_fitness"]
 
 # Calculate alignment-based fitness values (how well the model aligns with the log)
-# alpha_align_fitness = alignment_fitness.evaluate(alpha_align)["log_fitness"]
+alpha_align_fitness = alignment_fitness.evaluate(alpha_align)["log_fitness"]
 heur_align_fitness = alignment_fitness.evaluate(heur_align)["log_fitness"]
 
 # ====== Additional metrics calculation ======
@@ -99,7 +99,7 @@ heur_simplicity = simplicity_evaluator.apply(net_heur)
 # ====== Output results as formatted table ======
 
 table = [
-    ["Alpha Miner", alpha_token_fitness, "N/A", alpha_precision, alpha_generalization, alpha_simplicity],
+    ["Alpha Miner", alpha_token_fitness, alpha_align_fitness, alpha_precision, alpha_generalization, alpha_simplicity],
     ["Heuristic Miner", heur_token_fitness, heur_align_fitness, heur_precision, heur_generalization, heur_simplicity],
 ]
 
